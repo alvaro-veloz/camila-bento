@@ -146,28 +146,21 @@
      6. TESTIMONIOS SLIDER — fix overflow
   ───────────────────────────────────────── */
   function initTestimonios() {
-    const track    = document.getElementById('testimoniosTrack');
-    const prevBtn  = document.getElementById('testimoniosPrev');
-    const nextBtn  = document.getElementById('testimoniosNext');
+    const track       = document.getElementById('testimoniosTrack');
+    const prevBtn     = document.getElementById('testimoniosPrev');
+    const nextBtn     = document.getElementById('testimoniosNext');
     const progressBar = document.getElementById('testimoniosProgressBar');
     if (!track) return;
 
     const items = Array.from(track.querySelectorAll('.testimonio'));
     if (!items.length) return;
-    const total = items.length;
-    let current = 0, autoplay;
-
-    /* Setup forzado 100% por JS — no depende de CSS para el layout */
-    const clip = track.parentElement;
-    clip.style.cssText  = 'overflow:hidden;width:100%;';
-    track.style.cssText = `display:flex;width:${total * 100}%;transition:transform 0.75s cubic-bezier(0.16,1,0.3,1);will-change:transform;`;
-    items.forEach(item => {
-      item.style.cssText = `flex:0 0 ${100 / total}%;opacity:1;transform:none;`;
-    });
+    const total   = items.length;
+    let current   = 0;
+    let autoplay;
 
     function goTo(idx) {
       current = ((idx % total) + total) % total;
-      track.style.transform = `translateX(-${current * (100 / total)}%)`;
+      track.style.transform = `translateX(-${current * 100}%)`;
       if (progressBar) progressBar.style.width = ((current + 1) / total * 100) + '%';
     }
 

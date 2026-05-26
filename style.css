@@ -1280,31 +1280,42 @@ body.cursor-hover .cursor-ring {
 .testimonios {
   padding: var(--space-xl) 0;
   position: relative;
-  overflow: hidden;
 }
 
 .testimonios-header {
   margin-bottom: var(--space-lg);
 }
 
+/* El wrapper NO tiene overflow — solo posición */
 .testimonios-wrapper {
   position: relative;
+  width: 100%;
 }
 
-.testimonios-track {
-  display: flex;
-  gap: var(--space-md);
+/* El clip SÍ tiene overflow hidden */
+.testimonios-track-clip {
+  width: 100%;
   overflow: hidden;
 }
 
+/* El track se mueve con transform via JS */
+.testimonios-track {
+  display: flex;
+  gap: 0;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Cada card ocupa exactamente el ancho del clip */
 .testimonio {
   flex: 0 0 100%;
+  min-width: 100%;
+  box-sizing: border-box;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: clamp(2rem, 5vw, 3.5rem);
   position: relative;
-  transition: transform var(--t-slow) var(--ease), opacity var(--t-slow) var(--ease);
+  /* SIN opacity/transform — no queremos GSAP aquí */
 }
 
 .testimonio::before {
@@ -1317,11 +1328,12 @@ body.cursor-hover .cursor-ring {
   position: absolute;
   top: 1rem;
   left: 2rem;
+  pointer-events: none;
 }
 
 .testimonio-text {
   font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
   font-weight: 300;
   font-style: italic;
   color: var(--text);
@@ -1813,11 +1825,13 @@ a.contacto-value:hover {
   transform: translateY(40px);
 }
 
-/* Testimonios NO usan opacity 0 inicial — el wrapper con
-   overflow:hidden rompe el ScrollTrigger detection */
+/* Testimonios NO usan opacity 0 — el GSAP global los taparía */
 .testimonio {
   opacity: 1 !important;
   transform: none !important;
+  box-sizing: border-box !important;
+  min-width: 100% !important;
+  flex: 0 0 100% !important;
 }
 
 /* Hamburger — fix z-index y posición */
@@ -2011,31 +2025,6 @@ a.contacto-value:hover {
 
 .contacto-map-embed:hover iframe {
   filter: none;
-}
-
-/* ── Testimonios slider — fix definitivo ── */
-.testimonios-wrapper {
-  position: relative;
-}
-
-.testimonios-track-clip {
-  overflow: hidden;
-  width: 100%;
-}
-
-.testimonios-track {
-  display: flex;
-  gap: 0;
-  width: 100%;
-  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
-}
-
-.testimonio {
-  flex: 0 0 100%;
-  min-width: 100%;
-  opacity: 1 !important;
-  transform: none !important;
 }
 
 .contacto-map-placeholder { display: none; }
