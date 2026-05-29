@@ -1758,6 +1758,18 @@ a.contacto-value:hover {
   transition: all var(--t-fast);
 }
 
+.footer-social a img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.6;
+  transition: opacity var(--t-fast);
+  /* En light mode invertir para que se vea oscuro */
+}
+
+[data-theme="light"] .footer-social a img {
+  filter: invert(1);
+}
+
 .footer-social a svg {
   width: 16px;
   height: 16px;
@@ -1768,6 +1780,10 @@ a.contacto-value:hover {
   color: var(--accent-light);
   background: var(--accent-glow);
   transform: translateY(-2px);
+}
+
+.footer-social a:hover img {
+  opacity: 1;
 }
 
 .footer-nav-title {
