@@ -386,6 +386,124 @@
   /* ─────────────────────────────────────────
      12. MAIN
   ───────────────────────────────────────── */
+  /* ─────────────────────────────────────────
+     PHOTO SLIDER + LIGHTBOX
+  ───────────────────────────────────────── */
+  function initPhotoSlider() {
+    const track    = document.getElementById('photoTrack');
+    const prevBtn  = document.getElementById('photoPrev');
+    const nextBtn  = document.getElementById('photoNext');
+    const dotsWrap = document.getElementById('photoDots');
+    if (!track) return;
+
+    const slides = Array.from(track.querySelectorAll('.photo-slide'));
+    const dots   = dotsWrap ? Array.from(dotsWrap.querySelectorAll('.photo-dot')) : [];
+    const total  = slides.length;
+    let current  = 0;
+
+    function goTo(idx) {
+      current = ((idx % total) + total) % total;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', e => { e.stopPropagation(); goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', e => { e.stopPropagation(); goTo(current + 1); });
+
+    // Swipe touch
+    let tx = 0;
+    track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', e => {
+      const d = tx - e.changedTouches[0].clientX;
+      if (Math.abs(d) > 40) goTo(d > 0 ? current + 1 : current - 1);
+    }, { passive: true });
+
+    goTo(0);
+    return { getCurrent: () => current };
+  }
+
+  function initLightbox(sliderRef) {
+    const lightbox   = document.getElementById('lightbox');
+    const lbImg      = document.getElementById('lightboxImg');
+    const lbCounter  = document.getElementById('lightboxCounter');
+    const lbClose    = document.getElementById('lightboxClose');
+    const lbBackdrop = document.getElementById('lightboxBackdrop');
+    const lbPrev     = document.getElementById('lightboxPrev');
+    const lbNext     = document.getElementById('lightboxNext');
+    if (!lightbox || !lbImg) return;
+
+    const images = Array.from(document.querySelectorAll('.photo-slide .photo-real'));
+    const total  = images.length;
+    let current  = 0;
+
+    function openAt(idx) {
+      current = ((idx % total) + total) % total;
+      const src = images[current].src;
+      const alt = images[current].alt;
+      lbImg.src = src;
+      lbImg.alt = alt;
+      if (lbCounter) lbCounter.textContent = `${current + 1} / ${total}`;
+      lightbox.hidden   = false;
+      document.body.style.overflow = 'hidden';
+      // pequeño delay para que el display:flex pinte antes del transition
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => lightbox.classList.add('is-open'));
+      });
+    }
+
+    function close() {
+      lightbox.classList.remove('is-open');
+      document.body.style.overflow = '';
+      setTimeout(() => { lightbox.hidden = true; }, 450);
+    }
+
+    function navTo(idx) {
+      // animate out → in
+      lbImg.style.opacity   = '0';
+      lbImg.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        current = ((idx % total) + total) % total;
+        lbImg.src = images[current].src;
+        lbImg.alt = images[current].alt;
+        if (lbCounter) lbCounter.textContent = `${current + 1} / ${total}`;
+        lbImg.style.opacity   = '1';
+        lbImg.style.transform = 'scale(1)';
+      }, 180);
+    }
+
+    lbImg.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
+
+    // Abrir al click en cualquier foto
+    document.querySelectorAll('.photo-slide .photo-real').forEach((img, i) => {
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', () => openAt(i));
+    });
+
+    // Cerrar
+    if (lbClose)    lbClose.addEventListener('click', close);
+    if (lbBackdrop) lbBackdrop.addEventListener('click', close);
+
+    // Navegar
+    if (lbPrev) lbPrev.addEventListener('click', () => navTo(current - 1));
+    if (lbNext) lbNext.addEventListener('click', () => navTo(current + 1));
+
+    // Teclado
+    document.addEventListener('keydown', e => {
+      if (lightbox.hidden) return;
+      if (e.key === 'Escape')     close();
+      if (e.key === 'ArrowLeft')  navTo(current - 1);
+      if (e.key === 'ArrowRight') navTo(current + 1);
+    });
+
+    // Swipe en lightbox
+    let lbTx = 0;
+    lightbox.addEventListener('touchstart', e => { lbTx = e.touches[0].clientX; }, { passive: true });
+    lightbox.addEventListener('touchend', e => {
+      const d = lbTx - e.changedTouches[0].clientX;
+      if (Math.abs(d) > 50) navTo(d > 0 ? current + 1 : current - 1);
+    }, { passive: true });
+  }
+
   function main() {
     initNav();
     initTestimonios();
@@ -393,6 +511,8 @@
     initLogoInteraction();
     initActiveNav();
     initBrainScrollEffect();
+    const sliderRef = initPhotoSlider();
+    initLightbox(sliderRef);
     waitForGSAP(initGSAP);
   }
 
