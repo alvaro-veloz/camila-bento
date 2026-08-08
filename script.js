@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
-   PSICOLOGÍA HUMANIZADA — script.js  (v2 — fixes)
-   Sin Lenis (scroll nativo) · GSAP ScrollTrigger · Slider fix
+   PSICOLOGÍA HUMANIZADA — script.js
+   Interacciones, animaciones y sliders
 ═══════════════════════════════════════════════════════════════ */
 
 (function () {
@@ -16,6 +16,39 @@
     };
     check();
   }
+
+  /* ─────────────────────────────────────────
+     0.5 HERO SPLINE — solo se carga en desktop
+     (el modelo 3D es pesado; en mobile trababa el
+     scroll y gastaba batería/datos de más)
+  ───────────────────────────────────────── */
+  (function initHeroSpline() {
+    const container = document.getElementById('heroSpline');
+    if (!container) return;
+
+    function loadSpline() {
+      if (container.dataset.loaded) return;
+      container.dataset.loaded = 'true';
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://my.spline.design/particleshandwithalan-TYf8OcSRXKPzd7m1Lp195ohC/';
+      iframe.title = 'Modelo 3D interactivo — cerebro con partículas';
+      iframe.loading = 'lazy';
+      iframe.setAttribute('frameborder', '0');
+      iframe.style.cssText = 'border:0; display:block; width:100%; height:100%;';
+      container.appendChild(iframe);
+    }
+
+    function unloadSpline() {
+      container.dataset.loaded = '';
+      container.innerHTML = '';
+    }
+
+    // Carga el 3D solo mientras el hero está en pantalla (todos los dispositivos)
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => entry.isIntersecting ? loadSpline() : unloadSpline());
+    }, { threshold: 0.1 });
+    observer.observe(container.closest('.hero'));
+  })();
 
   /* ─────────────────────────────────────────
      1. AÑO FOOTER
@@ -53,40 +86,7 @@
   })();
 
   /* ─────────────────────────────────────────
-     3. CURSOR NEURAL
-  ───────────────────────────────────────── */
-  (function initCursor() {
-    if (!window.matchMedia('(hover: hover)').matches) return;
-    const dot  = document.querySelector('.cursor-dot');
-    const ring = document.querySelector('.cursor-ring');
-    if (!dot || !ring) return;
-
-    let mx = -100, my = -100, rx = -100, ry = -100;
-
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      dot.style.left = mx + 'px';
-      dot.style.top  = my + 'px';
-    });
-
-    (function loop() {
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-      requestAnimationFrame(loop);
-    })();
-
-    document.querySelectorAll('a, button, [data-gsap-service]').forEach(el => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-    });
-    document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
-    document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
-  })();
-
-  /* ─────────────────────────────────────────
-     4. LOADER
+     3. LOADER
   ───────────────────────────────────────── */
   function initLoader(onComplete) {
     const loader = document.getElementById('loader');
@@ -143,7 +143,7 @@
   }
 
   /* ─────────────────────────────────────────
-     6. TESTIMONIOS SLIDER — fix overflow
+     6. TESTIMONIOS SLIDER
   ───────────────────────────────────────── */
   function initTestimonios() {
     const track       = document.getElementById('testimoniosTrack');
@@ -182,11 +182,15 @@
   }
 
   /* ─────────────────────────────────────────
-     7. GSAP ANIMACIONES (sin Lenis)
+     7. GSAP ANIMACIONES
   ───────────────────────────────────────── */
   function initGSAP() {
     const { gsap, ScrollTrigger } = window;
     gsap.registerPlugin(ScrollTrigger);
+
+    /* Evita que ScrollTrigger recalcule (y "salten" las animaciones)
+       cuando en mobile aparece/desaparece la barra de direcciones */
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
     /* ── Hero entrance ── */
     gsap.timeline({ delay: 0.15 })
@@ -410,7 +414,6 @@
     if (prevBtn) prevBtn.addEventListener('click', e => { e.stopPropagation(); goTo(current - 1); });
     if (nextBtn) nextBtn.addEventListener('click', e => { e.stopPropagation(); goTo(current + 1); });
 
-    // Swipe touch
     let tx = 0;
     track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
     track.addEventListener('touchend', e => {
@@ -445,7 +448,6 @@
       if (lbCounter) lbCounter.textContent = `${current + 1} / ${total}`;
       lightbox.hidden   = false;
       document.body.style.overflow = 'hidden';
-      // pequeño delay para que el display:flex pinte antes del transition
       requestAnimationFrame(() => {
         requestAnimationFrame(() => lightbox.classList.add('is-open'));
       });
@@ -458,7 +460,6 @@
     }
 
     function navTo(idx) {
-      // animate out → in
       lbImg.style.opacity   = '0';
       lbImg.style.transform = 'scale(0.95)';
       setTimeout(() => {
@@ -473,21 +474,17 @@
 
     lbImg.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
 
-    // Abrir al click en cualquier foto
     document.querySelectorAll('.photo-slide .photo-real').forEach((img, i) => {
       img.style.cursor = 'zoom-in';
       img.addEventListener('click', () => openAt(i));
     });
 
-    // Cerrar
     if (lbClose)    lbClose.addEventListener('click', close);
     if (lbBackdrop) lbBackdrop.addEventListener('click', close);
 
-    // Navegar
     if (lbPrev) lbPrev.addEventListener('click', () => navTo(current - 1));
     if (lbNext) lbNext.addEventListener('click', () => navTo(current + 1));
 
-    // Teclado
     document.addEventListener('keydown', e => {
       if (lightbox.hidden) return;
       if (e.key === 'Escape')     close();
@@ -495,7 +492,6 @@
       if (e.key === 'ArrowRight') navTo(current + 1);
     });
 
-    // Swipe en lightbox
     let lbTx = 0;
     lightbox.addEventListener('touchstart', e => { lbTx = e.touches[0].clientX; }, { passive: true });
     lightbox.addEventListener('touchend', e => {

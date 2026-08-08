@@ -53,15 +53,6 @@
 <body>
 
   <!-- ═══════════════════════════════════════════
-       CURSOR PERSONALIZADO
-  ═══════════════════════════════════════════ -->
-  <div class="cursor" id="cursor" aria-hidden="true">
-    <div class="cursor-dot"></div>
-    <div class="cursor-ring"></div>
-    <div class="cursor-trail" id="cursorTrail"></div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════
        LOADER / INTRO
   ═══════════════════════════════════════════ -->
   <div class="loader" id="loader" aria-hidden="true" role="presentation">
@@ -169,18 +160,8 @@
   ═══════════════════════════════════════════ -->
   <section class="hero" id="inicio" aria-label="Sección principal">
 
-    <!-- Spline 3D background -->
-    <div class="hero-spline" aria-hidden="true">
-        <iframe
-        src="https://my.spline.design/particleshandwithalan-TYf8OcSRXKPzd7m1Lp195ohC/"
-        frameborder="0"
-        width="100%"
-        height="100%"
-        title="Modelo 3D interactivo — cerebro con partículas"
-        loading="lazy"
-        style="border:0; display:block; width:100%; height:100%;"
-      ></iframe>
-    </div>
+    <!-- Spline 3D background (solo desktop — en mobile pesa demasiado y trababa el scroll) -->
+    <div class="hero-spline" id="heroSpline" aria-hidden="true"></div>
 
     <!-- Overlay de atmósfera -->
     <div class="hero-overlay" aria-hidden="true"></div>
@@ -188,11 +169,23 @@
     <!-- Contenido hero -->
     <div class="hero-content">
 
+      <!-- Doodles cálidos -->
+      <svg class="doodle doodle--sparkle doodle--sparkle-1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2c.6 3.4 1.6 4.6 5 5.2-3.4.7-4.4 1.9-5 5.3-.6-3.4-1.6-4.6-5-5.3 3.4-.6 4.4-1.8 5-5.2z" fill="currentColor"/>
+      </svg>
+      <svg class="doodle doodle--heart doodle--heart-1" viewBox="0 0 30 26" fill="none" aria-hidden="true">
+        <path d="M15 24C6 18 2 13.4 2 8.6 2 4.8 4.9 2 8.4 2c2.3 0 4.3 1.3 5.6 3.3C15.3 3.3 17.3 2 19.6 2 23.1 2 26 4.8 26 8.6 26 13.4 22 18 15 24z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+
       <div class="hero-eyebrow" data-reveal>
-        <span class="eyebrow-dot" aria-hidden="true"></span>
-        <span>Cda. del Este, Paraguay</span>
-        <span class="eyebrow-sep" aria-hidden="true">·</span>
-        <span>Psicología clínica</span>
+        <span class="eyebrow-badge">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5S16.4 3 12 3 5 4.9 5 9.5 12 21 12 21z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span>Cda. del Este, Paraguay</span>
+        </span>
+        <span class="eyebrow-badge eyebrow-badge--warm">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20C6 15.8 3 12 3 8.4 3 5.4 5.2 3 8 3c1.8 0 3.4 1 4 2.6C12.6 4 14.2 3 16 3c2.8 0 5 2.4 5 5.4 0 3.6-3 7.4-9 12.6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span>Psicología clínica</span>
+        </span>
       </div>
 
       <h1 class="hero-headline" data-reveal>
@@ -306,6 +299,14 @@
         <!-- Columna texto -->
         <div class="sobre-mi-text">
 
+          <!-- Doodles cálidos -->
+          <svg class="doodle doodle--underline doodle--underline-1" viewBox="0 0 90 14" fill="none" aria-hidden="true">
+            <path d="M2 9c14-9 28-9 42-3 12 5 26 5 44-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <svg class="doodle doodle--spiral doodle--spiral-1" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path d="M20 8c6 0 10 4 10 9 0 4-3 7-7 7-3 0-5-2-5-5 0-2 1.6-3.6 3.6-3.6 1.6 0 2.8 1.2 2.8 2.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+
           <span class="section-eyebrow" data-gsap-reveal>
             <span aria-hidden="true">—</span> Sobre mí
           </span>
@@ -317,7 +318,6 @@
 
           <div class="sobre-paragraphs">
             <p data-gsap-reveal>
-              <!-- PLACEHOLDER: reemplazar con texto real de la psicóloga -->
               Hola me llamo Camila María Bento Álvarez y soy psicóloga clínica. Mi trabajo parte de la convicción de que cada persona lleva en sí misma la capacidad de sanar y transformarse.
             </p>
             <p data-gsap-reveal>
@@ -349,12 +349,157 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
+       MARQUEE — Fotos + especialidades (loop infinito CSS)
+  ═══════════════════════════════════════════ -->
+  <section class="marquee-section" aria-labelledby="marquee-titulo">
+    <div class="marquee-header">
+      <span class="section-eyebrow"><span aria-hidden="true">—</span> A tu lado</span>
+      <h2 class="section-title" id="marquee-titulo">Un acompañamiento<br>para <em>cada momento</em></h2>
+    </div>
+
+    <div class="marquee-viewport">
+      <div class="marquee-track" id="marqueeTrack">
+
+        <!-- Set 1 -->
+        <div class="marquee-card marquee-card--photo">
+          <img src="img/foto-1.webp" alt="Camila Bento acompañando una sesión" loading="lazy" width="168" height="200">
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 10c7 0 12 5 12 11 0 5-3.6 8.6-8.6 8.6-3.6 0-6.4-2.6-6.4-6 0-2.6 2-4.6 4.4-4.6 2 0 3.4 1.4 3.4 3.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M14 22c-2.4 1.4-3.6 3.6-3.6 6.2 0 4.6 4.2 8 9.4 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="marquee-card-label">Ansiedad</span>
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M18 30C11 25 8 20 8 15.4 8 11.4 11 8 15 8c2.8 0 5.2 1.6 6.8 4 1.6-2.4 4-4 6.8-4 4 0 7 3.4 7 7.4 0 4.6-3 9.6-10 14.6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M30 30c3-1.6 5-3.6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="marquee-card-label">Terapia de pareja</span>
+        </div>
+
+        <div class="marquee-card marquee-card--photo">
+          <img src="img/foto-2.webp" alt="Camila Bento en su consultorio" loading="lazy" width="168" height="200">
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <circle cx="24" cy="24" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M24 6v4M24 38v4M6 24h4M38 24h4M11 11l3 3M34 34l3 3M37 11l-3 3M14 34l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="marquee-card-label">Autoestima</span>
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 10c-3 6-9 8-9 14a9 9 0 0018 0c0-6-6-8-9-14z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M24 24v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="marquee-card-label">Duelo</span>
+        </div>
+
+        <div class="marquee-card marquee-card--photo">
+          <img src="img/foto-3.webp" alt="Camila Bento retrato" loading="lazy" width="168" height="200">
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M8 16a6 6 0 016-6h16a6 6 0 016 6v8a6 6 0 01-6 6H20l-7 6v-6h-1a6 6 0 01-4-10.4" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <span class="marquee-card-label">Comunicación</span>
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 8c8 4 14 4 14 4-1 14-6 20-14 24C16 32 11 26 10 12c0 0 6 0 14-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <span class="marquee-card-label">Bienestar</span>
+        </div>
+
+        <div class="marquee-card marquee-card--photo">
+          <img src="img/foto-4.webp" alt="Camila Bento sonriendo" loading="lazy" width="168" height="200">
+        </div>
+
+        <!-- Set 2 (duplicado para loop infinito) -->
+        <div class="marquee-card marquee-card--photo" aria-hidden="true">
+          <img src="img/foto-1.webp" alt="" loading="lazy" width="168" height="200">
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad" aria-hidden="true">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 10c7 0 12 5 12 11 0 5-3.6 8.6-8.6 8.6-3.6 0-6.4-2.6-6.4-6 0-2.6 2-4.6 4.4-4.6 2 0 3.4 1.4 3.4 3.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M14 22c-2.4 1.4-3.6 3.6-3.6 6.2 0 4.6 4.2 8 9.4 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="marquee-card-label">Ansiedad</span>
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad" aria-hidden="true">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M18 30C11 25 8 20 8 15.4 8 11.4 11 8 15 8c2.8 0 5.2 1.6 6.8 4 1.6-2.4 4-4 6.8-4 4 0 7 3.4 7 7.4 0 4.6-3 9.6-10 14.6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M30 30c3-1.6 5-3.6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="marquee-card-label">Terapia de pareja</span>
+        </div>
+
+        <div class="marquee-card marquee-card--photo" aria-hidden="true">
+          <img src="img/foto-2.webp" alt="" loading="lazy" width="168" height="200">
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad" aria-hidden="true">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <circle cx="24" cy="24" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M24 6v4M24 38v4M6 24h4M38 24h4M11 11l3 3M34 34l3 3M37 11l-3 3M14 34l-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="marquee-card-label">Autoestima</span>
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad" aria-hidden="true">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 10c-3 6-9 8-9 14a9 9 0 0018 0c0-6-6-8-9-14z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M24 24v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="marquee-card-label">Duelo</span>
+        </div>
+
+        <div class="marquee-card marquee-card--photo" aria-hidden="true">
+          <img src="img/foto-3.webp" alt="" loading="lazy" width="168" height="200">
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad" aria-hidden="true">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M8 16a6 6 0 016-6h16a6 6 0 016 6v8a6 6 0 01-6 6H20l-7 6v-6h-1a6 6 0 01-4-10.4" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <span class="marquee-card-label">Comunicación</span>
+        </div>
+
+        <div class="marquee-card marquee-card--especialidad" aria-hidden="true">
+          <svg class="marquee-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 8c8 4 14 4 14 4-1 14-6 20-14 24C16 32 11 26 10 12c0 0 6 0 14-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <span class="marquee-card-label">Bienestar</span>
+        </div>
+
+        <div class="marquee-card marquee-card--photo" aria-hidden="true">
+          <img src="img/foto-4.webp" alt="" loading="lazy" width="168" height="200">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
        SERVICIOS — Filas fullwidth nivel awards
   ═══════════════════════════════════════════ -->
   <section class="servicios" id="servicios" aria-labelledby="servicios-titulo">
 
     <div class="container">
       <div class="servicios-header">
+        <svg class="doodle doodle--sparkle doodle--sparkle-1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2c.6 3.4 1.6 4.6 5 5.2-3.4.7-4.4 1.9-5 5.3-.6-3.4-1.6-4.6-5-5.3 3.4-.6 4.4-1.8 5-5.2z" fill="currentColor"/>
+        </svg>
         <span class="section-eyebrow" data-gsap-reveal>
           <span aria-hidden="true">—</span> Servicios
         </span>
@@ -520,6 +665,9 @@
     <div class="container">
 
       <div class="proceso-header">
+        <svg class="doodle doodle--spiral doodle--spiral-1" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <path d="M20 8c6 0 10 4 10 9 0 4-3 7-7 7-3 0-5-2-5-5 0-2 1.6-3.6 3.6-3.6 1.6 0 2.8 1.2 2.8 2.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
         <span class="section-eyebrow" data-gsap-reveal>
           <span aria-hidden="true">—</span> El proceso
         </span>
@@ -603,6 +751,9 @@
     <div class="container">
 
       <div class="testimonios-header">
+        <svg class="doodle doodle--heart doodle--heart-1" viewBox="0 0 30 26" fill="none" aria-hidden="true">
+          <path d="M15 24C6 18 2 13.4 2 8.6 2 4.8 4.9 2 8.4 2c2.3 0 4.3 1.3 5.6 3.3C15.3 3.3 17.3 2 19.6 2 23.1 2 26 4.8 26 8.6 26 13.4 22 18 15 24z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
         <span class="section-eyebrow" data-gsap-reveal>
           <span aria-hidden="true">—</span> Testimonios
         </span>
@@ -753,6 +904,12 @@
   ═══════════════════════════════════════════ -->
   <section class="cta-band" aria-labelledby="cta-titulo">
     <div class="cta-band-inner" data-gsap-reveal>
+      <svg class="doodle doodle--sparkle doodle--sparkle-1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2c.6 3.4 1.6 4.6 5 5.2-3.4.7-4.4 1.9-5 5.3-.6-3.4-1.6-4.6-5-5.3 3.4-.6 4.4-1.8 5-5.2z" fill="currentColor"/>
+      </svg>
+      <svg class="doodle doodle--underline doodle--underline-1" viewBox="0 0 90 14" fill="none" aria-hidden="true">
+        <path d="M2 9c14-9 28-9 42-3 12 5 26 5 44-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
       <p class="cta-band-label" id="cta-titulo">El primer paso es el más difícil</p>
       <h2 class="cta-band-headline">
         ¿Estás listo para<br><em>comenzar?</em>
@@ -776,6 +933,9 @@
       <div class="contacto-grid">
 
         <div class="contacto-info">
+          <svg class="doodle doodle--spiral doodle--spiral-1" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path d="M20 8c6 0 10 4 10 9 0 4-3 7-7 7-3 0-5-2-5-5 0-2 1.6-3.6 3.6-3.6 1.6 0 2.8 1.2 2.8 2.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
           <span class="section-eyebrow" data-gsap-reveal>
             <span aria-hidden="true">—</span> Contacto
           </span>

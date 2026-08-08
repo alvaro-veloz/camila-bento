@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    PSICOLOGÍA HUMANIZADA — style.css
-   Neural Depth · Fraunces + DM Sans · Dark/Light mode
+   Fraunces + DM Sans · Modo claro / oscuro
 ═══════════════════════════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────
@@ -27,6 +27,11 @@
 
   --light-on:     #FFE566;       /* lucecita encendida */
   --light-glow:   rgba(255,229,102,0.5);
+
+  /* Cálido — para doodles y detalles humanos */
+  --warm:         #E8998D;
+  --warm-soft:    rgba(232,153,141,0.16);
+  --warm-line:    rgba(232,153,141,0.55);
 
   /* Typography */
   --font-display: 'Fraunces', Georgia, serif;
@@ -75,6 +80,10 @@
 
   --light-on:     #888;          /* lucecita apagada en light */
   --light-glow:   transparent;
+
+  --warm:         #D97D6F;
+  --warm-soft:    rgba(217,125,111,0.10);
+  --warm-line:    rgba(217,125,111,0.5);
 }
 
 /* ─────────────────────────────────────────
@@ -133,53 +142,6 @@ button {
 ::selection {
   background: var(--accent);
   color: #fff;
-}
-
-/* ─────────────────────────────────────────
-   3. CURSOR PERSONALIZADO
-───────────────────────────────────────── */
-.cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
-}
-
-.cursor-dot {
-  width: 6px;
-  height: 6px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  transition: transform var(--t-fast) var(--ease), width var(--t-fast), height var(--t-fast);
-}
-
-.cursor-ring {
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgba(255,255,255,0.6);
-  border-radius: 50%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  transition: transform 0.12s var(--ease), width 0.3s var(--ease), height 0.3s var(--ease), opacity 0.3s;
-}
-
-body.cursor-hover .cursor-dot {
-  width: 10px;
-  height: 10px;
-}
-
-body.cursor-hover .cursor-ring {
-  width: 60px;
-  height: 60px;
-  opacity: 0.4;
-}
-
-@media (hover: none) {
-  .cursor { display: none; }
 }
 
 /* ─────────────────────────────────────────
@@ -685,7 +647,11 @@ body.cursor-hover .cursor-ring {
   position: absolute;
   inset: 0;
   z-index: 0;
-  pointer-events: none; /* evita que el iframe robe el mouse y baje los fps */
+  pointer-events: none;
+  /* Fondo cálido visible como base y mientras carga el 3D */
+  background:
+    radial-gradient(60% 50% at 78% 30%, var(--accent-glow), transparent 70%),
+    radial-gradient(45% 40% at 15% 75%, var(--gold-soft), transparent 70%);
 }
 
 .hero-spline iframe {
@@ -720,32 +686,41 @@ body.cursor-hover .cursor-ring {
 .hero-eyebrow {
   display: flex;
   align-items: center;
-  gap: 0.6em;
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  flex-wrap: wrap;
+  gap: 0.6rem;
   margin-bottom: var(--space-md);
   opacity: 0;
   transform: translateY(16px);
 }
 
-.eyebrow-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: dot-pulse 2s ease-in-out infinite;
+.eyebrow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 1em;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--text-soft);
 }
 
-@keyframes dot-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
-  50%       { box-shadow: 0 0 0 6px transparent; }
+.eyebrow-badge svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--accent);
 }
 
-.eyebrow-sep {
-  opacity: 0.3;
+.eyebrow-badge--warm {
+  border-color: var(--warm-line);
+  color: var(--text);
+}
+
+.eyebrow-badge--warm svg {
+  color: var(--warm);
 }
 
 .hero-headline {
@@ -1850,7 +1825,6 @@ a.contacto-value:hover {
   flex: 0 0 100% !important;
 }
 
-/* Hamburger — fix z-index y posición */
 .nav-hamburger {
   position: relative;
   z-index: 101;
@@ -1939,7 +1913,7 @@ a.contacto-value:hover {
   .photo-frame {
     max-width: 100%;
     aspect-ratio: 3/4;
-    min-height: 320px; /* fix colapso */
+    min-height: 320px;
   }
 
   .photo-placeholder {
@@ -2066,7 +2040,6 @@ a.contacto-value:hover {
   }
 
   .scroll-line { animation: none; }
-  .eyebrow-dot { animation: none; }
   .brain-light-glow { animation: none; }
   .light-rays { animation: none; }
 }
@@ -2351,4 +2324,188 @@ a.contacto-value:hover {
 
   .lightbox-prev { left: 0.5rem; }
   .lightbox-next { right: 0.5rem; }
+}
+
+/* ═══════════════════════════════════════════
+   DOODLES HUMANOS — trazos a mano, cálidos
+   Decoran sin competir con el contenido.
+═══════════════════════════════════════════ */
+.doodle {
+  position: absolute;
+  color: var(--warm-line);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.doodle--sparkle {
+  width: 22px; height: 22px;
+  animation: doodle-twinkle 3.2s ease-in-out infinite;
+}
+
+.doodle--heart {
+  width: 26px; height: 26px;
+  animation: doodle-float 5s ease-in-out infinite;
+}
+
+.doodle--spiral {
+  width: 34px; height: 34px;
+  animation: doodle-float 6s ease-in-out infinite 0.4s;
+}
+
+.doodle--underline {
+  width: 90px; height: 14px;
+}
+
+@keyframes doodle-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-8px) rotate(-4deg); }
+}
+
+@keyframes doodle-twinkle {
+  0%, 100% { opacity: 0.5; transform: scale(0.9) rotate(0deg); }
+  50%      { opacity: 1;   transform: scale(1.1) rotate(10deg); }
+}
+
+/* Posicionamiento por contexto */
+.hero-content { position: relative; }
+.hero .doodle--sparkle-1 { top: -2.2rem; left: -0.5rem; }
+.hero .doodle--heart-1   { top: 0.4rem; right: -2.4rem; }
+
+.sobre-mi-text { position: relative; }
+.sobre-mi .doodle--underline-1 { left: 0; top: -0.6rem; }
+.sobre-mi .doodle--spiral-1    { right: -2.2rem; bottom: 2.4rem; }
+
+.servicios-header { position: relative; }
+.servicios .doodle--sparkle-1 { top: -1.4rem; right: 1rem; }
+
+.proceso-header { position: relative; }
+.proceso .doodle--spiral-1 { top: -1.6rem; left: 2rem; }
+
+.testimonios-header { position: relative; }
+.testimonios .doodle--heart-1 { top: -1.2rem; right: 3rem; }
+
+.cta-band-inner { position: relative; }
+.cta-band .doodle--sparkle-1 { top: -1rem; left: 8%; }
+.cta-band .doodle--underline-1 { bottom: -0.5rem; right: 6%; }
+
+.contacto-info { position: relative; }
+.contacto-info .doodle--spiral-1 { top: -1.8rem; left: -0.4rem; }
+
+@media (max-width: 768px) {
+  .doodle { display: none; } /* limpio en mobile, foco en el contenido */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doodle--sparkle, .doodle--heart, .doodle--spiral { animation: none; }
+}
+
+/* ═══════════════════════════════════════════
+   MARQUEE — "Un acompañamiento para cada momento"
+   Carrusel infinito: fotos + íconos de especialidades
+   hechos a mano. 100% CSS (sin JS) = liviano y fluido.
+═══════════════════════════════════════════ */
+.marquee-section {
+  padding: var(--space-lg) 0;
+  overflow: hidden;
+  position: relative;
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.marquee-header {
+  text-align: center;
+  margin-bottom: var(--space-md);
+  padding: 0 var(--space-sm);
+}
+
+.marquee-header .section-eyebrow { justify-content: center; }
+.marquee-header .section-title { }
+
+.marquee-viewport {
+  position: relative;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-md);
+  width: max-content;
+  animation: marquee-scroll 34s linear infinite;
+  will-change: transform;
+}
+
+.marquee-viewport:hover .marquee-track,
+.marquee-viewport:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); } /* el track está duplicado x2 → loop perfecto */
+}
+
+.marquee-card {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 168px;
+  height: 200px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  transition: transform var(--t-med) var(--ease), border-color var(--t-med);
+}
+
+.marquee-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--warm-line);
+}
+
+/* Card tipo foto */
+.marquee-card--photo {
+  padding: 0;
+  overflow: hidden;
+}
+
+.marquee-card--photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Card tipo especialidad (ícono hecho a mano) */
+.marquee-card--especialidad {
+  padding: 1.2rem;
+  text-align: center;
+}
+
+.marquee-icon {
+  width: 46px;
+  height: 46px;
+  color: var(--warm);
+  margin-bottom: 0.2rem;
+}
+
+.marquee-card-label {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-soft);
+}
+
+@media (max-width: 768px) {
+  .marquee-card { width: 130px; height: 160px; }
+  .marquee-icon { width: 36px; height: 36px; }
+  .marquee-card-label { font-size: 0.75rem; }
+  .marquee-track { animation-duration: 26s; gap: var(--space-sm); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; overflow-x: auto; }
 }
