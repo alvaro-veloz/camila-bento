@@ -6,7 +6,7 @@
        META BASE
   ═══════════════════════════════════════════ -->
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <!-- SEO -->
   <title>Camila Bento | Psicóloga — Ciudad del Este, Paraguay</title>
@@ -30,7 +30,13 @@
   <meta name="twitter:image" content="https://psicologiahumanizada.com/og-image.jpg" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="icon" type="image/x-icon" href="img/favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="img/favicon/android-chrome-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="img/favicon/android-chrome-512x512.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
 
   <!-- ═══════════════════════════════════════════
        FUENTES — Fraunces (editorial display) + DM Sans (cuerpo refinado)
@@ -49,9 +55,9 @@
 
   <!-- Lottie (animaciones opcionales — ver secciones marcadas "Lottie" en el HTML) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" defer></script>
-  <script src="lottie-data.js" defer></script>
+  <script src="js/lottie-data.js" defer></script>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
@@ -365,18 +371,6 @@
       <h2 class="section-title" id="marquee-titulo">Un acompañamiento<br>para <em>cada momento</em></h2>
     </div>
 
-    <!-- Rosa decorativa de fondo (solo mobile) -->
-    <svg class="doodle-bg doodle-bg--rose" viewBox="0 0 200 320" fill="none" aria-hidden="true">
-      <path d="M100 95c0-16-13-29-29-29s-29 13-29 29 13 29 29 29c9 0 17-4 23-10" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-      <path d="M100 95c16 0 29-13 29-29s-13-29-29-29-29 13-29 29c0 9 4 17 10 23" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-      <path d="M100 95c0 16 13 29 29 29s29-13 29-29-13-29-29-29c-9 0-17 4-23 10" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-      <path d="M100 95c-16 0-29 13-29 29s13 29 29 29 29-13 29-29c0-9-4-17-10-23" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-      <circle cx="100" cy="95" r="12" stroke="currentColor" stroke-width="2"/>
-      <path d="M96 150c-6 30-4 70 2 130" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-      <path d="M97 190c-14 4-22 16-24 30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <path d="M99 235c14 2 24 12 28 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-
     <div class="marquee-viewport">
       <div class="marquee-track" id="marqueeTrack">
 
@@ -514,6 +508,17 @@
        SERVICIOS — Filas fullwidth nivel awards
   ═══════════════════════════════════════════ -->
   <section class="servicios" id="servicios" aria-labelledby="servicios-titulo">
+    <!-- Rosa decorativa de fondo (solo mobile) -->
+    <svg class="doodle-bg doodle-bg--rose" viewBox="0 0 200 320" fill="none" aria-hidden="true">
+      <path d="M100 95c0-16-13-29-29-29s-29 13-29 29 13 29 29 29c9 0 17-4 23-10" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M100 95c16 0 29-13 29-29s-13-29-29-29-29 13-29 29c0 9 4 17 10 23" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M100 95c0 16 13 29 29 29s29-13 29-29-13-29-29-29c-9 0-17 4-23 10" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M100 95c-16 0-29 13-29 29s13 29 29 29 29-13 29-29c0-9-4-17-10-23" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <circle cx="100" cy="95" r="12" stroke="currentColor" stroke-width="2"/>
+      <path d="M96 150c-6 30-4 70 2 130" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M97 190c-14 4-22 16-24 30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M99 235c14 2 24 12 28 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
 
     <div class="container">
       <div class="servicios-header">
@@ -1195,13 +1200,19 @@
 
       <div class="footer-bottom">
         <span>© <span id="year"></span> Camila Bento · Psicóloga · Todos los derechos reservados</span>
-        <span>Diseñado por <a href="https://andinawebstudio.com" target="_blank" rel="noopener">Andina Web Studio</a></span>
+        <span class="footer-credit">
+          <svg class="footer-credit-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M2 18l6.5-10 4 6 2-3L22 18H2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M8.5 8l1.4 1.6M17.5 9l1.1 1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          Diseñado por <a href="https://andinawebstudio.com" target="_blank" rel="noopener">Andina Web Studio</a>
+        </span>
       </div>
     </div>
 
   </footer>
 
-  <script src="script.js" defer></script>
+  <script src="js/script.js" defer></script>
 </body>
 
 </html>
