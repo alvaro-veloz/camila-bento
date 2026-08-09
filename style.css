@@ -2569,18 +2569,31 @@ a.contacto-value:hover {
 
 .footer-brand { display: flex; flex-direction: column; }
 
+.footer-reveal-wrap {
+  position: relative;
+}
+
 .footer-lottie {
   display: none;
-  width: 120px;
-  height: 120px;
-  margin-top: 1.2rem;
-  opacity: 0.85;
+  position: absolute;
+  top: 50%;
+  right: clamp(1.5rem, 8vw, 8rem);
+  transform: translateY(-50%);
+  width: clamp(220px, 22vw, 420px);
+  height: clamp(220px, 22vw, 420px);
+  opacity: 0.9;
 }
 
 .footer-lottie.is-active { display: block; }
 
-@media (max-width: 768px) {
-  .footer-lottie { width: 96px; height: 96px; }
+@media (max-width: 900px) {
+  .footer-lottie {
+    position: static;
+    transform: none;
+    width: 150px;
+    height: 150px;
+    margin: 0.5rem auto 0;
+  }
 }
 
 /* ═══════════════════════════════════════════

@@ -506,13 +506,19 @@
      un data-lottie-src con un link .json real.
   ───────────────────────────────────────── */
   function initLottieSlots() {
-    const slots = document.querySelectorAll('[data-lottie-src]');
+    const slots = document.querySelectorAll('[data-lottie-src], [data-lottie-key]');
     if (!slots.length) return;
 
     function run() {
       slots.forEach(el => {
+        if (el.dataset.lottieLoaded) return;
+
+        const key = el.getAttribute('data-lottie-key');
         const src = el.getAttribute('data-lottie-src');
-        if (!src || el.dataset.lottieLoaded) return;
+        const embeddedData = key && window.LOTTIE_DATA ? window.LOTTIE_DATA[key] : null;
+
+        if (!embeddedData && !src) return;
+
         el.dataset.lottieLoaded = 'true';
         el.classList.add('is-active');
         window.lottie.loadAnimation({
@@ -520,13 +526,13 @@
           renderer: 'svg',
           loop: true,
           autoplay: true,
-          path: src,
+          ...(embeddedData ? { animationData: embeddedData } : { path: src }),
         });
       });
     }
 
-    // Espera a que lottie.min.js termine de cargar del CDN,
-    // en vez de rendirse si todavía no está listo.
+    // Espera a que lottie.min.js (y lottie-data.js) terminen de cargar,
+    // en vez de rendirse si todavía no están listos.
     (function waitForLottie(tries) {
       if (window.lottie) { run(); return; }
       if (tries <= 0) return; // CDN no disponible — no rompe nada

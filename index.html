@@ -47,8 +47,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js" defer></script>
 
-  <!-- Lottie (animaciones .json opcionales — ver secciones marcadas "Lottie" en el HTML) -->
+  <!-- Lottie (animaciones opcionales — ver secciones marcadas "Lottie" en el HTML) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" defer></script>
+  <script src="lottie-data.js" defer></script>
 
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -1125,6 +1126,9 @@
         <span>Camila</span>
         <span>Bento</span>
       </div>
+
+      <!-- Animación decorativa (mente / conexiones) — en la zona libre -->
+      <div class="footer-lottie" data-lottie-key="deep-learning"></div>
     </div>
 
     <div class="footer-content">
@@ -1147,8 +1151,7 @@
             </a>
           </div>
 
-          <!-- Animación decorativa (mente / conexiones) -->
-          <div class="footer-lottie" data-lottie-src="Deep_Learning.json" aria-hidden="true"></div>
+          <!-- (Lottie movido a la zona vacía del reveal — ver arriba) -->
         </div>
 
         <div class="footer-nav-group">
