@@ -657,6 +657,11 @@ button {
 .hero-spline iframe {
   pointer-events: none;
   will-change: auto;
+  /* la escena 3D no siempre cubre el 100% del ancho en pantallas angostas
+     (deja un filo del fondo propio del embed) — se agranda un poco y se
+     recorta con el overflow:hidden del .hero para que no se note */
+  transform: scale(1.12);
+  transform-origin: center center;
 }
 
 .hero-overlay {
@@ -2338,23 +2343,23 @@ a.contacto-value:hover {
   opacity: 0.9;
 }
 
-.doodle--sparkle {
-  width: 22px; height: 22px;
-  animation: doodle-twinkle 3.2s ease-in-out infinite;
+.doodle--flor {
+  width: 34px; height: 34px;
+  animation: doodle-twinkle 3.6s ease-in-out infinite;
 }
 
 .doodle--heart {
-  width: 26px; height: 26px;
+  width: 32px; height: 32px;
   animation: doodle-float 5s ease-in-out infinite;
 }
 
 .doodle--spiral {
-  width: 34px; height: 34px;
+  width: 42px; height: 42px;
   animation: doodle-float 6s ease-in-out infinite 0.4s;
 }
 
 .doodle--underline {
-  width: 90px; height: 14px;
+  width: 110px; height: 16px;
 }
 
 @keyframes doodle-float {
@@ -2363,41 +2368,60 @@ a.contacto-value:hover {
 }
 
 @keyframes doodle-twinkle {
-  0%, 100% { opacity: 0.5; transform: scale(0.9) rotate(0deg); }
-  50%      { opacity: 1;   transform: scale(1.1) rotate(10deg); }
+  0%, 100% { opacity: 0.6; transform: scale(0.92) rotate(0deg); }
+  50%      { opacity: 1;   transform: scale(1.08) rotate(8deg); }
 }
 
-/* Posicionamiento por contexto */
+/* Posicionamiento por contexto (desktop) */
 .hero-content { position: relative; }
-.hero .doodle--sparkle-1 { top: -2.2rem; left: -0.5rem; }
-.hero .doodle--heart-1   { top: 0.4rem; right: -2.4rem; }
+.hero .doodle--flor-1  { top: -2.6rem; left: -0.5rem; }
+.hero .doodle--heart-1 { top: 0.4rem; right: -2.6rem; }
 
 .sobre-mi-text { position: relative; }
 .sobre-mi .doodle--underline-1 { left: 0; top: -0.6rem; }
-.sobre-mi .doodle--spiral-1    { right: -2.2rem; bottom: 2.4rem; }
+.sobre-mi .doodle--spiral-1    { right: -2.4rem; bottom: 2.4rem; }
 
 .servicios-header { position: relative; }
-.servicios .doodle--sparkle-1 { top: -1.4rem; right: 1rem; }
+.servicios .doodle--flor-1 { top: -1.6rem; right: 1rem; }
 
 .proceso-header { position: relative; }
-.proceso .doodle--spiral-1 { top: -1.6rem; left: 2rem; }
+.proceso .doodle--spiral-1 { top: -1.8rem; left: 2rem; }
 
 .testimonios-header { position: relative; }
-.testimonios .doodle--heart-1 { top: -1.2rem; right: 3rem; }
+.testimonios .doodle--heart-1 { top: -1.4rem; right: 3rem; }
 
 .cta-band-inner { position: relative; }
-.cta-band .doodle--sparkle-1 { top: -1rem; left: 8%; }
-.cta-band .doodle--underline-1 { bottom: -0.5rem; right: 6%; }
+.cta-band .doodle--flor-1 { top: -1.2rem; left: 8%; }
+.cta-band .doodle--underline-1 { bottom: -0.6rem; right: 6%; }
 
 .contacto-info { position: relative; }
-.contacto-info .doodle--spiral-1 { top: -1.8rem; left: -0.4rem; }
+.contacto-info .doodle--spiral-1 { top: -2rem; left: -0.4rem; }
 
+/* Mobile — visibles pero reposicionados para no chocar con el layout centrado */
 @media (max-width: 768px) {
-  .doodle { display: none; } /* limpio en mobile, foco en el contenido */
+  .doodle--flor  { width: 30px; height: 30px; }
+  .doodle--heart { width: 28px; height: 28px; }
+  .doodle--spiral { width: 36px; height: 36px; }
+  .doodle--underline { width: 90px; height: 14px; }
+
+  .hero .doodle--flor-1  { top: -2.2rem; left: 0.5rem; }
+  .hero .doodle--heart-1 { top: -2.2rem; right: 0.5rem; }
+
+  .sobre-mi .doodle--underline-1 { left: 50%; transform: translateX(-50%); top: -1rem; }
+  .sobre-mi .doodle--spiral-1    { right: 0.5rem; bottom: auto; top: -1.8rem; }
+
+  .servicios .doodle--flor-1 { top: -1.2rem; right: 0.5rem; }
+  .proceso .doodle--spiral-1 { top: -1.4rem; left: 0.5rem; }
+  .testimonios .doodle--heart-1 { top: -1rem; right: 1rem; }
+
+  .cta-band .doodle--flor-1 { top: -0.6rem; left: 4%; }
+  .cta-band .doodle--underline-1 { bottom: -0.4rem; right: 4%; }
+
+  .contacto-info .doodle--spiral-1 { top: -1.6rem; left: auto; right: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .doodle--sparkle, .doodle--heart, .doodle--spiral { animation: none; }
+  .doodle--flor, .doodle--heart, .doodle--spiral { animation: none; }
 }
 
 /* ═══════════════════════════════════════════
@@ -2508,4 +2532,159 @@ a.contacto-value:hover {
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; overflow-x: auto; }
+}
+
+/* ═══════════════════════════════════════════
+   LOTTIE — slots opcionales
+   Se activan solos cuando data-lottie-src tiene un link.
+═══════════════════════════════════════════ */
+.proceso-header { display: flex; flex-direction: column; }
+
+.proceso-lottie {
+  display: none;
+  width: 180px;
+  height: 180px;
+  align-self: flex-end;
+  margin-top: -3rem;
+}
+
+.proceso-lottie.is-active { display: block; }
+
+.cta-band { position: relative; }
+
+.cta-band-lottie {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.cta-band-lottie.is-active { display: block; }
+
+@media (max-width: 768px) {
+  .proceso-lottie { width: 120px; height: 120px; align-self: center; margin-top: 0; }
+}
+
+.footer-brand { display: flex; flex-direction: column; }
+
+.footer-lottie {
+  display: none;
+  width: 120px;
+  height: 120px;
+  margin-top: 1.2rem;
+  opacity: 0.85;
+}
+
+.footer-lottie.is-active { display: block; }
+
+@media (max-width: 768px) {
+  .footer-lottie { width: 96px; height: 96px; }
+}
+
+/* ═══════════════════════════════════════════
+   PHOTO MARQUEE — solo fotos de Camila
+   Diseño distinto al marquee de especialidades:
+   cards grandes en zigzag, caption cálida, scroll
+   en sentido opuesto (derecha) y más lento.
+═══════════════════════════════════════════ */
+.photo-marquee-section {
+  padding: var(--space-lg) 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.photo-marquee-header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  padding: 0 var(--space-sm);
+}
+
+.photo-marquee-header .section-eyebrow { justify-content: center; }
+
+.photo-marquee-viewport {
+  position: relative;
+  padding: 1.5rem 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.photo-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: max-content;
+  animation: photo-marquee-scroll 40s linear infinite reverse;
+  will-change: transform;
+}
+
+.photo-marquee-viewport:hover .photo-marquee-track,
+.photo-marquee-viewport:focus-within .photo-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes photo-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.photo-marquee-card {
+  flex: 0 0 auto;
+  position: relative;
+  width: 220px;
+  height: 300px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--warm-line);
+  transform: translateY(0);
+  transition: transform var(--t-med) var(--ease);
+}
+
+.photo-marquee-card--offset {
+  transform: translateY(-1.4rem);
+}
+
+.photo-marquee-card:hover {
+  transform: translateY(-0.6rem);
+}
+
+.photo-marquee-card--offset:hover {
+  transform: translateY(-2rem);
+}
+
+.photo-marquee-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-marquee-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65), transparent 55%);
+}
+
+.photo-marquee-card figcaption {
+  position: absolute;
+  left: 1rem;
+  bottom: 0.9rem;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .photo-marquee-card { width: 160px; height: 220px; }
+  .photo-marquee-card--offset { transform: translateY(-1rem); }
+  .photo-marquee-track { animation-duration: 30s; gap: var(--space-sm); }
+  .photo-marquee-card figcaption { font-size: 0.9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-marquee-track { animation: none; overflow-x: auto; }
 }

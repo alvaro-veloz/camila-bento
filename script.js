@@ -500,6 +500,40 @@
     }, { passive: true });
   }
 
+  /* ─────────────────────────────────────────
+     13. LOTTIE — slots opcionales
+     Se activan solos cuando el contenedor tiene
+     un data-lottie-src con un link .json real.
+  ───────────────────────────────────────── */
+  function initLottieSlots() {
+    const slots = document.querySelectorAll('[data-lottie-src]');
+    if (!slots.length) return;
+
+    function run() {
+      slots.forEach(el => {
+        const src = el.getAttribute('data-lottie-src');
+        if (!src || el.dataset.lottieLoaded) return;
+        el.dataset.lottieLoaded = 'true';
+        el.classList.add('is-active');
+        window.lottie.loadAnimation({
+          container: el,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: src,
+        });
+      });
+    }
+
+    // Espera a que lottie.min.js termine de cargar del CDN,
+    // en vez de rendirse si todavía no está listo.
+    (function waitForLottie(tries) {
+      if (window.lottie) { run(); return; }
+      if (tries <= 0) return; // CDN no disponible — no rompe nada
+      setTimeout(() => waitForLottie(tries - 1), 200);
+    })(50); // hasta ~10s de espera
+  }
+
   function main() {
     initNav();
     initTestimonios();
@@ -507,6 +541,7 @@
     initLogoInteraction();
     initActiveNav();
     initBrainScrollEffect();
+    initLottieSlots();
     const sliderRef = initPhotoSlider();
     initLightbox(sliderRef);
     waitForGSAP(initGSAP);
