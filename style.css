@@ -648,10 +648,10 @@ button {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  /* Fondo cálido visible como base y mientras carga el 3D */
+  /* Fondo cálido, sutil — visible solo el instante antes de que cargue el 3D */
   background:
-    radial-gradient(60% 50% at 78% 30%, var(--accent-glow), transparent 70%),
-    radial-gradient(45% 40% at 15% 75%, var(--gold-soft), transparent 70%);
+    radial-gradient(60% 50% at 78% 30%, rgba(139,127,231,0.14), transparent 70%),
+    radial-gradient(45% 40% at 15% 75%, rgba(212,175,120,0.10), transparent 70%);
 }
 
 .hero-spline iframe {
@@ -660,7 +660,7 @@ button {
   /* la escena 3D no siempre cubre el 100% del ancho en pantallas angostas
      (deja un filo del fondo propio del embed) — se agranda un poco y se
      recorta con el overflow:hidden del .hero para que no se note */
-  transform: scale(1.12);
+  transform: scale(1.18);
   transform-origin: center center;
 }
 
@@ -2457,18 +2457,13 @@ a.contacto-value:hover {
   align-items: stretch;
   gap: var(--space-md);
   width: max-content;
-  animation: marquee-scroll 34s linear infinite;
   will-change: transform;
+  cursor: grab;
+  touch-action: pan-y;
 }
 
-.marquee-viewport:hover .marquee-track,
-.marquee-viewport:focus-within .marquee-track {
-  animation-play-state: paused;
-}
-
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); } /* el track está duplicado x2 → loop perfecto */
+.marquee-track.is-dragging {
+  cursor: grabbing;
 }
 
 .marquee-card {
@@ -2527,12 +2522,11 @@ a.contacto-value:hover {
   .marquee-card { width: 130px; height: 160px; }
   .marquee-icon { width: 36px; height: 36px; }
   .marquee-card-label { font-size: 0.75rem; }
-  .marquee-track { animation-duration: 26s; gap: var(--space-sm); }
+  .marquee-track { gap: var(--space-sm); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; overflow-x: auto; }
-}
+/* prefers-reduced-motion: el autoplay se desactiva desde JS;
+   el arrastre manual sigue funcionando igual. */
 
 /* ═══════════════════════════════════════════
    LOTTIE — slots opcionales
@@ -2700,4 +2694,48 @@ a.contacto-value:hover {
 
 @media (prefers-reduced-motion: reduce) {
   .photo-marquee-track { animation: none; overflow-x: auto; }
+}
+
+/* ═══════════════════════════════════════════
+   DOODLES GRANDES DE FONDO — solo mobile
+   Rosa (marquee especialidades) y corazón (Proceso),
+   del mismo estilo a mano que los doodles chicos,
+   pero a tamaño del contenedor, detrás del contenido.
+═══════════════════════════════════════════ */
+.doodle-bg {
+  display: none;
+  position: absolute;
+  color: var(--warm-line);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.16;
+}
+
+@media (max-width: 768px) {
+  .doodle-bg { display: block; }
+
+  .doodle-bg--rose {
+    top: 50%;
+    left: 50%;
+    width: 70vw;
+    max-width: 320px;
+    height: auto;
+    transform: translate(-50%, -50%);
+  }
+
+  .doodle-bg--heart {
+    top: 50%;
+    left: 50%;
+    width: 85vw;
+    max-width: 380px;
+    height: auto;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Asegura que el contenido quede por encima del doodle */
+  .marquee-viewport,
+  .proceso .container {
+    position: relative;
+    z-index: 1;
+  }
 }

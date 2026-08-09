@@ -365,6 +365,18 @@
       <h2 class="section-title" id="marquee-titulo">Un acompañamiento<br>para <em>cada momento</em></h2>
     </div>
 
+    <!-- Rosa decorativa de fondo (solo mobile) -->
+    <svg class="doodle-bg doodle-bg--rose" viewBox="0 0 200 320" fill="none" aria-hidden="true">
+      <path d="M100 95c0-16-13-29-29-29s-29 13-29 29 13 29 29 29c9 0 17-4 23-10" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M100 95c16 0 29-13 29-29s-13-29-29-29-29 13-29 29c0 9 4 17 10 23" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M100 95c0 16 13 29 29 29s29-13 29-29-13-29-29-29c-9 0-17 4-23 10" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M100 95c-16 0-29 13-29 29s13 29 29 29 29-13 29-29c0-9-4-17-10-23" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <circle cx="100" cy="95" r="12" stroke="currentColor" stroke-width="2"/>
+      <path d="M96 150c-6 30-4 70 2 130" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M97 190c-14 4-22 16-24 30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M99 235c14 2 24 12 28 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+
     <div class="marquee-viewport">
       <div class="marquee-track" id="marqueeTrack">
 
@@ -674,6 +686,10 @@
        PROCESO — Cómo trabajo (horizontal scroll)
   ═══════════════════════════════════════════ -->
   <section class="proceso" id="proceso" aria-labelledby="proceso-titulo">
+    <!-- Corazón decorativo de fondo (solo mobile) -->
+    <svg class="doodle-bg doodle-bg--heart" viewBox="0 0 200 180" fill="none" aria-hidden="true">
+      <path d="M100 165C55 130 20 98 20 62 20 34 42 14 68 14c14 0 27 7 32 18 5-11 18-18 32-18 26 0 48 20 48 48 0 36-35 68-80 103z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+    </svg>
     <div class="container">
 
       <div class="proceso-header">
@@ -916,6 +932,58 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
+       PHOTO MARQUEE — Solo fotos de Camila, diseño
+       distinto al primer marquee (sin íconos)
+  ═══════════════════════════════════════════ -->
+  <section class="photo-marquee-section" aria-labelledby="photo-marquee-titulo">
+    <div class="photo-marquee-header">
+      <span class="section-eyebrow"><span aria-hidden="true">—</span> Conóceme un poco más</span>
+      <h2 class="section-title" id="photo-marquee-titulo">Un rostro <em>humano</em><br>detrás del consultorio</h2>
+    </div>
+
+    <div class="photo-marquee-viewport">
+      <div class="photo-marquee-track">
+
+        <figure class="photo-marquee-card">
+          <img data-lightbox-index="0" src="img/foto-1.webp" alt="Camila Bento en consulta" loading="lazy" width="240" height="320">
+          <figcaption>En consulta</figcaption>
+        </figure>
+        <figure class="photo-marquee-card photo-marquee-card--offset">
+          <img data-lightbox-index="1" src="img/foto-2.webp" alt="Camila Bento en su espacio de trabajo" loading="lazy" width="240" height="320">
+          <figcaption>Su espacio</figcaption>
+        </figure>
+        <figure class="photo-marquee-card">
+          <img data-lightbox-index="2" src="img/foto-3.webp" alt="Camila Bento retrato" loading="lazy" width="240" height="320">
+          <figcaption>Camila</figcaption>
+        </figure>
+        <figure class="photo-marquee-card photo-marquee-card--offset">
+          <img data-lightbox-index="3" src="img/foto-4.webp" alt="Camila Bento sonriendo" loading="lazy" width="240" height="320">
+          <figcaption>Siempre cerca</figcaption>
+        </figure>
+
+        <!-- Duplicado para loop infinito -->
+        <figure class="photo-marquee-card" aria-hidden="true">
+          <img data-lightbox-index="0" src="img/foto-1.webp" alt="" loading="lazy" width="240" height="320">
+          <figcaption>En consulta</figcaption>
+        </figure>
+        <figure class="photo-marquee-card photo-marquee-card--offset" aria-hidden="true">
+          <img data-lightbox-index="1" src="img/foto-2.webp" alt="" loading="lazy" width="240" height="320">
+          <figcaption>Su espacio</figcaption>
+        </figure>
+        <figure class="photo-marquee-card" aria-hidden="true">
+          <img data-lightbox-index="2" src="img/foto-3.webp" alt="" loading="lazy" width="240" height="320">
+          <figcaption>Camila</figcaption>
+        </figure>
+        <figure class="photo-marquee-card photo-marquee-card--offset" aria-hidden="true">
+          <img data-lightbox-index="3" src="img/foto-4.webp" alt="" loading="lazy" width="240" height="320">
+          <figcaption>Siempre cerca</figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
        CTA BAND — Franja de conversión
   ═══════════════════════════════════════════ -->
   <section class="cta-band" aria-labelledby="cta-titulo">
@@ -1061,58 +1129,6 @@
     </div>
 
     <div class="section-counter" aria-hidden="true">06</div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       PHOTO MARQUEE — Solo fotos de Camila, diseño
-       distinto al primer marquee (sin íconos)
-  ═══════════════════════════════════════════ -->
-  <section class="photo-marquee-section" aria-labelledby="photo-marquee-titulo">
-    <div class="photo-marquee-header">
-      <span class="section-eyebrow"><span aria-hidden="true">—</span> Conóceme un poco más</span>
-      <h2 class="section-title" id="photo-marquee-titulo">Un rostro <em>humano</em><br>detrás del consultorio</h2>
-    </div>
-
-    <div class="photo-marquee-viewport">
-      <div class="photo-marquee-track">
-
-        <figure class="photo-marquee-card">
-          <img src="img/foto-1.webp" alt="Camila Bento en consulta" loading="lazy" width="240" height="320">
-          <figcaption>En consulta</figcaption>
-        </figure>
-        <figure class="photo-marquee-card photo-marquee-card--offset">
-          <img src="img/foto-2.webp" alt="Camila Bento en su espacio de trabajo" loading="lazy" width="240" height="320">
-          <figcaption>Su espacio</figcaption>
-        </figure>
-        <figure class="photo-marquee-card">
-          <img src="img/foto-3.webp" alt="Camila Bento retrato" loading="lazy" width="240" height="320">
-          <figcaption>Camila</figcaption>
-        </figure>
-        <figure class="photo-marquee-card photo-marquee-card--offset">
-          <img src="img/foto-4.webp" alt="Camila Bento sonriendo" loading="lazy" width="240" height="320">
-          <figcaption>Siempre cerca</figcaption>
-        </figure>
-
-        <!-- Duplicado para loop infinito -->
-        <figure class="photo-marquee-card" aria-hidden="true">
-          <img src="img/foto-1.webp" alt="" loading="lazy" width="240" height="320">
-          <figcaption>En consulta</figcaption>
-        </figure>
-        <figure class="photo-marquee-card photo-marquee-card--offset" aria-hidden="true">
-          <img src="img/foto-2.webp" alt="" loading="lazy" width="240" height="320">
-          <figcaption>Su espacio</figcaption>
-        </figure>
-        <figure class="photo-marquee-card" aria-hidden="true">
-          <img src="img/foto-3.webp" alt="" loading="lazy" width="240" height="320">
-          <figcaption>Camila</figcaption>
-        </figure>
-        <figure class="photo-marquee-card photo-marquee-card--offset" aria-hidden="true">
-          <img src="img/foto-4.webp" alt="" loading="lazy" width="240" height="320">
-          <figcaption>Siempre cerca</figcaption>
-        </figure>
-
-      </div>
-    </div>
   </section>
 
   <!-- ═══════════════════════════════════════════

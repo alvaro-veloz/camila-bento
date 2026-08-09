@@ -38,14 +38,16 @@
       container.appendChild(iframe);
     }
 
-    function unloadSpline() {
-      container.dataset.loaded = '';
-      container.innerHTML = '';
-    }
-
-    // Carga el 3D solo mientras el hero está en pantalla (todos los dispositivos)
+    // Se carga una sola vez, la primera vez que el hero entra en pantalla,
+    // y ya no se desmonta más (desmontarlo y volver a montarlo causaba un
+    // parpadeo del fondo de repuesto — el "filo"/luz que se veía a la derecha).
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => entry.isIntersecting ? loadSpline() : unloadSpline());
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          loadSpline();
+          observer.disconnect();
+        }
+      });
     }, { threshold: 0.1 });
     observer.observe(container.closest('.hero'));
   })();
@@ -479,6 +481,12 @@
       img.addEventListener('click', () => openAt(i));
     });
 
+    // Fotos del segundo marquee — abren la misma foto ampliada
+    document.querySelectorAll('.photo-marquee-card img[data-lightbox-index]').forEach(img => {
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', () => openAt(parseInt(img.dataset.lightboxIndex, 10)));
+    });
+
     if (lbClose)    lbClose.addEventListener('click', close);
     if (lbBackdrop) lbBackdrop.addEventListener('click', close);
 
@@ -505,6 +513,86 @@
      Se activan solos cuando el contenedor tiene
      un data-lottie-src con un link .json real.
   ───────────────────────────────────────── */
+  /* ─────────────────────────────────────────
+     12.5 MARQUEE ARRASTRABLE (especialidades)
+     Autoplay suave + drag con mouse/dedo. El
+     track está duplicado x2 en el HTML, así que
+     el loop es perfecto haciendo módulo sobre la
+     mitad del ancho total.
+  ───────────────────────────────────────── */
+  function initDraggableMarquee() {
+    const viewport = document.querySelector('.marquee-viewport');
+    const track = document.getElementById('marqueeTrack');
+    if (!viewport || !track) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const SPEED = 36; // px por segundo, autoplay
+    let half = track.scrollWidth / 2;
+    let pos = 0;
+    let dragging = false;
+    let startX = 0;
+    let startPos = 0;
+    let resumeTimer = null;
+    let lastTime = null;
+
+    window.addEventListener('resize', () => { half = track.scrollWidth / 2; });
+
+    function wrap(p) {
+      if (half <= 0) return 0;
+      p = p % half;
+      if (p < 0) p += half;
+      return p;
+    }
+
+    function apply() {
+      track.style.transform = `translateX(${-pos}px)`;
+    }
+
+    function frame(now) {
+      if (lastTime === null) lastTime = now;
+      const dt = (now - lastTime) / 1000;
+      lastTime = now;
+
+      if (!dragging && !reduceMotion) {
+        pos = wrap(pos + SPEED * dt);
+        apply();
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    function onDown(e) {
+      dragging = true;
+      track.classList.add('is-dragging');
+      startX = e.clientX;
+      startPos = pos;
+      clearTimeout(resumeTimer);
+      track.setPointerCapture && track.setPointerCapture(e.pointerId);
+    }
+
+    function onMove(e) {
+      if (!dragging) return;
+      const delta = e.clientX - startX;
+      pos = wrap(startPos - delta);
+      apply();
+    }
+
+    function onUp() {
+      if (!dragging) return;
+      dragging = false;
+      track.classList.remove('is-dragging');
+    }
+
+    track.addEventListener('pointerdown', onDown);
+    track.addEventListener('pointermove', onMove);
+    track.addEventListener('pointerup', onUp);
+    track.addEventListener('pointercancel', onUp);
+    track.addEventListener('pointerleave', () => { if (dragging) onUp(); });
+
+    // Evita que el navegador intente arrastrar las imágenes como si fueran links
+    track.querySelectorAll('img').forEach(img => { img.draggable = false; });
+  }
+
   function initLottieSlots() {
     const slots = document.querySelectorAll('[data-lottie-src], [data-lottie-key]');
     if (!slots.length) return;
@@ -548,6 +636,7 @@
     initActiveNav();
     initBrainScrollEffect();
     initLottieSlots();
+    initDraggableMarquee();
     const sliderRef = initPhotoSlider();
     initLightbox(sliderRef);
     waitForGSAP(initGSAP);
