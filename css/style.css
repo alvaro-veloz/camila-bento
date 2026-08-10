@@ -2444,7 +2444,7 @@ a.contacto-value:hover {
 }
 
 .marquee-header .section-eyebrow { justify-content: center; }
-.marquee-header .section-title { }
+
 
 .marquee-viewport {
   position: relative;
@@ -2668,30 +2668,10 @@ a.contacto-value:hover {
   display: block;
 }
 
-.photo-marquee-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.65), transparent 55%);
-  pointer-events: none; /* deja pasar el clic hacia la foto */
-}
-
-.photo-marquee-card figcaption {
-  position: absolute;
-  left: 1rem;
-  bottom: 0.9rem;
-  z-index: 1;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1.05rem;
-  color: #fff;
-}
-
 @media (max-width: 768px) {
   .photo-marquee-card { width: 160px; height: 220px; }
   .photo-marquee-card--offset { transform: translateY(-1rem); }
   .photo-marquee-track { animation-duration: 30s; gap: var(--space-sm); }
-  .photo-marquee-card figcaption { font-size: 0.9rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2699,27 +2679,58 @@ a.contacto-value:hover {
 }
 
 /* ═══════════════════════════════════════════
-   DOODLES GRANDES DE FONDO — solo mobile
-   Rosa (marquee especialidades) y corazón (Proceso),
-   del mismo estilo a mano que los doodles chicos,
-   pero a tamaño del contenedor, detrás del contenido.
+   DOODLES GRANDES DE FONDO
+   Rosa (Servicios) y corazón (Proceso), mismo
+   estilo a mano que los doodles chicos, pero
+   grandes y de fondo — versión mobile (centrada,
+   tamaño del contenedor) y versión desktop (más
+   chica, en una esquina, bien sutil).
 ═══════════════════════════════════════════ */
 .doodle-bg {
-  display: none;
+  display: block;
   position: absolute;
   color: var(--warm-line);
   pointer-events: none;
   z-index: 0;
-  opacity: 0.16;
+  opacity: 0.1;
+}
+
+/* Desktop — esquina, discreta, no compite con el contenido */
+.doodle-bg--rose {
+  top: 6%;
+  right: 3%;
+  width: clamp(220px, 22vw, 340px);
+  height: auto;
+}
+
+.doodle-bg--heart {
+  bottom: 5%;
+  left: 3%;
+  width: clamp(240px, 24vw, 360px);
+  height: auto;
+}
+
+.servicios,
+.proceso {
+  overflow: hidden;
+}
+
+/* Asegura que el contenido quede por encima del doodle de fondo */
+.marquee-viewport,
+.proceso .container,
+.servicios .container {
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 768px) {
-  .doodle-bg { display: block; }
+  .doodle-bg { opacity: 0.16; }
   .servicios { overflow: hidden; }
 
   .doodle-bg--rose {
     top: 50%;
     left: 50%;
+    right: auto;
     width: 70vw;
     max-width: 320px;
     height: auto;
@@ -2729,6 +2740,7 @@ a.contacto-value:hover {
   .doodle-bg--heart {
     top: 50%;
     left: 50%;
+    bottom: auto;
     width: 85vw;
     max-width: 380px;
     height: auto;

@@ -437,14 +437,31 @@
     const lbNext     = document.getElementById('lightboxNext');
     if (!lightbox || !lbImg) return;
 
+    // Cada carrusel tiene su propio set de fotos — así el visor
+    // siempre agranda la foto correcta, aunque sean distintas entre sí.
     const images = Array.from(document.querySelectorAll('.photo-slide .photo-real'));
-    const total  = images.length;
-    let current  = 0;
 
-    function openAt(idx) {
+    // El marquee tiene el track duplicado x2 para el loop infinito, así
+    // que tomamos solo las fotos únicas (las no-duplicadas) como fuente,
+    // pero dejamos clickeables TODAS las tarjetas (reales y copias),
+    // cada una apuntando a su foto real por data-lightbox-index.
+    const marqueeUnique = Array.from(
+      document.querySelectorAll('.photo-marquee-card:not([aria-hidden]) img[data-lightbox-index]')
+    );
+    const marqueeAll = Array.from(
+      document.querySelectorAll('.photo-marquee-card img[data-lightbox-index]')
+    );
+
+    let activeSet = images;
+    let current = 0;
+
+    function openAt(idx, set) {
+      activeSet = set || images;
+      const total = activeSet.length;
+      if (!total) return;
       current = ((idx % total) + total) % total;
-      const src = images[current].src;
-      const alt = images[current].alt;
+      const src = activeSet[current].src;
+      const alt = activeSet[current].alt;
       lbImg.src = src;
       lbImg.alt = alt;
       if (lbCounter) lbCounter.textContent = `${current + 1} / ${total}`;
@@ -462,12 +479,14 @@
     }
 
     function navTo(idx) {
+      const total = activeSet.length;
+      if (!total) return;
       lbImg.style.opacity   = '0';
       lbImg.style.transform = 'scale(0.95)';
       setTimeout(() => {
         current = ((idx % total) + total) % total;
-        lbImg.src = images[current].src;
-        lbImg.alt = images[current].alt;
+        lbImg.src = activeSet[current].src;
+        lbImg.alt = activeSet[current].alt;
         if (lbCounter) lbCounter.textContent = `${current + 1} / ${total}`;
         lbImg.style.opacity   = '1';
         lbImg.style.transform = 'scale(1)';
@@ -476,15 +495,16 @@
 
     lbImg.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
 
-    document.querySelectorAll('.photo-slide .photo-real').forEach((img, i) => {
+    images.forEach((img, i) => {
       img.style.cursor = 'zoom-in';
-      img.addEventListener('click', () => openAt(i));
+      img.addEventListener('click', () => openAt(i, images));
     });
 
-    // Fotos del segundo marquee — abren la misma foto ampliada
-    document.querySelectorAll('.photo-marquee-card img[data-lightbox-index]').forEach(img => {
+    // Fotos del segundo marquee — reales y copias abren la misma foto real
+    marqueeAll.forEach(img => {
       img.style.cursor = 'zoom-in';
-      img.addEventListener('click', () => openAt(parseInt(img.dataset.lightboxIndex, 10)));
+      const idx = parseInt(img.dataset.lightboxIndex, 10);
+      img.addEventListener('click', () => openAt(idx, marqueeUnique));
     });
 
     if (lbClose)    lbClose.addEventListener('click', close);
