@@ -97,7 +97,7 @@
 
     document.body.classList.add('is-loading');
     const start = performance.now();
-    const dur   = 1600;
+    const dur   = 3600; // +2s extra para que el Spline termine de cargar bien
 
     function tick(now) {
       const p = Math.min(((now - start) / dur) * 100, 100);
