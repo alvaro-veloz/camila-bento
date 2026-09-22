@@ -18,9 +18,8 @@
   }
 
   /* ─────────────────────────────────────────
-     0.5 HERO SPLINE — solo se carga en desktop
-     (el modelo 3D es pesado; en mobile trababa el
-     scroll y gastaba batería/datos de más)
+     0.5 HERO SPLINE — carga diferida cuando el
+     hero entra en pantalla, en desktop y mobile
   ───────────────────────────────────────── */
   (function initHeroSpline() {
     const container = document.getElementById('heroSpline');
@@ -209,10 +208,13 @@
     });
 
     /* ── Parallax foto ── */
-    gsap.to('.photo-frame', {
-      yPercent: -8, ease: 'none',
-      scrollTrigger: { trigger: '.sobre-mi', start: 'top bottom', end: 'bottom top', scrub: 1.2 },
-    });
+    const photoFrame = document.querySelector('.photo-frame');
+    if (photoFrame) {
+      gsap.to(photoFrame, {
+        yPercent: -8, ease: 'none',
+        scrollTrigger: { trigger: '.sobre-mi', start: 'top bottom', end: 'bottom top', scrub: 1.2 },
+      });
+    }
 
     /* ── Reveals genéricos ── */
     gsap.utils.toArray('[data-gsap-reveal]').forEach(el => {
@@ -262,10 +264,13 @@
     });
 
     /* ── Línea foto ── */
-    gsap.fromTo('.photo-accent-line', { scaleY: 0 }, {
-      scaleY: 1, duration: 1.2, ease: 'power3.out', transformOrigin: 'top center',
-      scrollTrigger: { trigger: '.sobre-mi', start: 'top 70%' },
-    });
+    const photoAccentLine = document.querySelector('.photo-accent-line');
+    if (photoAccentLine) {
+      gsap.fromTo(photoAccentLine, { scaleY: 0 }, {
+        scaleY: 1, duration: 1.2, ease: 'power3.out', transformOrigin: 'top center',
+        scrollTrigger: { trigger: '.sobre-mi', start: 'top 70%' },
+      });
+    }
 
     /* ── Badges stagger ── */
     gsap.fromTo('.badge', { opacity: 0, scale: 0.85, y: 10 }, {
@@ -280,8 +285,12 @@
     });
 
     /* ── Contacto card ── */
-    gsap.fromTo('.contacto-card', { opacity: 0, x: 40 }, {
-      opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+    const contactCardFrom = window.matchMedia('(max-width: 768px)').matches
+      ? { opacity: 0, y: 30 }
+      : { opacity: 0, x: 40 };
+
+    gsap.fromTo('.contacto-card', contactCardFrom, {
+      opacity: 1, x: 0, y: 0, duration: 1, ease: 'power3.out',
       scrollTrigger: { trigger: '.contacto-card', start: 'top 80%' },
     });
 
@@ -613,6 +622,152 @@
     track.querySelectorAll('img').forEach(img => { img.draggable = false; });
   }
 
+  /* ─────────────────────────────────────────
+     12.6 UN MINUTO PARA TI
+     Selector emocional + respiración guiada
+  ───────────────────────────────────────── */
+  function initPauseExperience() {
+    const section = document.getElementById('pausa');
+    const stage = section && section.querySelector('.pause-stage');
+    const moodButtons = section ? Array.from(section.querySelectorAll('.pause-mood')) : [];
+    const startButton = document.getElementById('pauseStart');
+    const startLabel = document.getElementById('pauseStartLabel');
+    const kicker = document.getElementById('pauseKicker');
+    const step = document.getElementById('pauseStep');
+    const guidance = document.getElementById('pauseGuidance');
+    const reflection = document.getElementById('pauseReflection');
+    const pauseLottie = document.getElementById('pauseLottie');
+    if (!section || !stage || !moodButtons.length || !startButton) return;
+
+    const moods = {
+      ansiedad: {
+        kicker: 'Para la ansiedad',
+        guidance: 'Bajemos el ritmo, una respiración a la vez.',
+        reflection: 'Vamos a darle un poco más de espacio a tu respiración, sin exigir que nada desaparezca.',
+        complete: 'Lo que sientes puede estar aquí sin ocuparlo todo. Has creado un poco de espacio para ti.',
+      },
+      cansancio: {
+        kicker: 'Para el cansancio',
+        guidance: 'Este momento también puede ser descanso.',
+        reflection: 'Por unos segundos, permite que tu cuerpo no tenga que sostener nada más.',
+        complete: 'Descansar también es avanzar. Puedes llevar esta suavidad contigo al continuar.',
+      },
+      tristeza: {
+        kicker: 'Para la tristeza',
+        guidance: 'Puedes sentirlo sin apresurarte.',
+        reflection: 'Respira con lo que está presente. Hay emociones que solo necesitan ser acompañadas.',
+        complete: 'Fuiste amable contigo durante este momento. A veces, eso ya es una forma de sanar.',
+      },
+      confusion: {
+        kicker: 'Para la confusión',
+        guidance: 'La claridad puede esperar un momento.',
+        reflection: 'Deja que cada respiración abra un pequeño espacio entre tus pensamientos.',
+        complete: 'La claridad no siempre llega de golpe. A veces comienza con una pausa como esta.',
+      },
+      pausa: {
+        kicker: 'Este momento es tuyo',
+        guidance: 'Este momento es solo para respirar.',
+        reflection: 'Quédate aquí. Solo observa cómo el aire entra y sale, sin corregir nada.',
+        complete: 'Volver a ti también puede comenzar así. Lleva esta calma contigo al continuar.',
+      },
+    };
+
+    const DURATION = 32000;
+    const PHASE_DURATION = 4000;
+    let selectedMood = '';
+    let animationFrame = 0;
+
+    function setBreathingSpeed(speed) {
+      if (pauseLottie && pauseLottie._lottieAnimation) {
+        pauseLottie._lottieAnimation.setSpeed(speed);
+      }
+    }
+
+    function stopExercise() {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+      stage.classList.remove('is-running', 'is-complete');
+      stage.style.setProperty('--pause-progress', '0%');
+    }
+
+    function selectMood(mood) {
+      const content = moods[mood];
+      if (!content) return;
+
+      stopExercise();
+      selectedMood = mood;
+      section.dataset.mood = mood;
+
+      moodButtons.forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.mood === mood));
+      });
+
+      kicker.textContent = content.kicker;
+      step.textContent = 'Pausa de 32 segundos';
+      guidance.textContent = content.guidance;
+      reflection.textContent = content.reflection;
+      startButton.disabled = false;
+      startLabel.textContent = 'Comenzar mi pausa';
+      setBreathingSpeed(0.65);
+    }
+
+    function completeExercise() {
+      const content = moods[selectedMood];
+      animationFrame = 0;
+      stage.classList.remove('is-running');
+      stage.classList.add('is-complete');
+      stage.style.setProperty('--pause-progress', '100%');
+      kicker.textContent = content.kicker;
+      step.textContent = 'Pausa completada';
+      guidance.textContent = 'Gracias por detenerte un momento.';
+      reflection.textContent = content.complete;
+      startButton.disabled = false;
+      startLabel.textContent = 'Regalarme otra pausa';
+      setBreathingSpeed(0.65);
+    }
+
+    function startExercise() {
+      if (!selectedMood || stage.classList.contains('is-running')) return;
+
+      const content = moods[selectedMood];
+      const startedAt = performance.now();
+      stopExercise();
+      stage.classList.add('is-running');
+      startButton.disabled = true;
+      startLabel.textContent = 'Respirando contigo';
+      setBreathingSpeed(0.85);
+
+      function tick(now) {
+        const elapsed = now - startedAt;
+        if (elapsed >= DURATION) {
+          completeExercise();
+          return;
+        }
+
+        const phaseIndex = Math.floor(elapsed / PHASE_DURATION);
+        const inhaling = phaseIndex % 2 === 0;
+        const cycle = Math.floor(phaseIndex / 2) + 1;
+        const progress = Math.min((elapsed / DURATION) * 100, 100);
+
+        stage.style.setProperty('--pause-progress', `${progress}%`);
+        step.textContent = `Respiración ${cycle} de 4`;
+        guidance.textContent = inhaling ? 'Inhala lentamente…' : 'Exhala con suavidad…';
+        reflection.textContent = inhaling
+          ? 'Deja que el aire encuentre espacio dentro de ti.'
+          : content.reflection;
+
+        animationFrame = requestAnimationFrame(tick);
+      }
+
+      animationFrame = requestAnimationFrame(tick);
+    }
+
+    moodButtons.forEach(button => {
+      button.addEventListener('click', () => selectMood(button.dataset.mood));
+    });
+    startButton.addEventListener('click', startExercise);
+  }
+
   function initLottieSlots() {
     const slots = document.querySelectorAll('[data-lottie-src], [data-lottie-key]');
     if (!slots.length) return;
@@ -629,13 +784,19 @@
 
         el.dataset.lottieLoaded = 'true';
         el.classList.add('is-active');
-        window.lottie.loadAnimation({
+        const animation = window.lottie.loadAnimation({
           container: el,
           renderer: 'svg',
           loop: true,
           autoplay: true,
           ...(embeddedData ? { animationData: embeddedData } : { path: src }),
         });
+        el._lottieAnimation = animation;
+
+        const requestedSpeed = Number(el.getAttribute('data-lottie-speed'));
+        if (Number.isFinite(requestedSpeed) && requestedSpeed > 0) {
+          animation.setSpeed(requestedSpeed);
+        }
       });
     }
 
@@ -657,6 +818,7 @@
     initBrainScrollEffect();
     initLottieSlots();
     initDraggableMarquee();
+    initPauseExperience();
     const sliderRef = initPhotoSlider();
     initLightbox(sliderRef);
     waitForGSAP(initGSAP);
